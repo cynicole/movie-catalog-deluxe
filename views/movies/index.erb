@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>movies_test</title>
+  </head>
+  <body>
+
+    <h1>Movies</h1>
+
+    <ul>
+      <% @movies.each do |movie| %>
+          <li>
+            <a href="/movies/<%= movie['id'] %>" target = "_blank"><%= movie['title'] %></a><br>
+            Year: <%= movie['year'] %> |
+            Rating: <%= movie['rating'] %> |
+            Genre: <%= movie['genre'] %> |
+            Studio: <%= movie['studio'] %>
+          </li>
+          <% end %>
+
+    </ul>
+
+  </body>
+</html>

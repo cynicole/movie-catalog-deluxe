@@ -1,0 +1,6 @@
+<h1><%= @roles[0]['name'] %></h1>
+  <ul>
+    <% @roles.each do |role| %>
+    <li><%= role['character'] %>, <a href="/movies/<%= role['id'] %>"><%= role['title'] %></a></li>
+    <% end %>
+  </ul>
