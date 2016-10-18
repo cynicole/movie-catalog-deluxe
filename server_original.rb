@@ -25,46 +25,16 @@ def get_actors
   end
 end
 
-
-def get_movies
-  ordering = params[:order]
-  ordering = 'title' if ordering.nil? || ordering.empty?
-  page_num = params[:page]
-  page_num = 1 if page_num.nil? || page_num.empty?
-  offset = [page_num.to_i * 20]
+def get_movies#(sort_by)
   db_connection do |conn|
     sql_query = "SELECT movies.id, movies.title, movies.year, movies.rating, genres.name AS genre, studios.name AS studio
     FROM movies
     LEFT JOIN genres ON movies.genre_id = genres.id
     LEFT JOIN studios ON movies.studio_id = studios.id
-    ORDER BY movies.#{ordering}
-    LIMIT 20 OFFSET ($1);"
-    conn.exec_params(sql_query, offset).to_a
+    ORDER BY movies.title;" #change code for 'movies.title'
+    conn.exec(sql_query)
   end
 end
-
-# ORIGINAL
-# def get_movies
-#   db_connection do |conn|
-#     sql_query = "SELECT movies.id, movies.title, movies.year, movies.rating, genres.name AS genre, studios.name AS studio
-#     FROM movies
-#     LEFT JOIN genres ON movies.genre_id = genres.id
-#     LEFT JOIN studios ON movies.studio_id = studios.id
-#     ORDER BY movies.title;"
-#     conn.exec(sql_query)
-#   end
-# end
-
-# get '/movies?order=year' do
-#   db_connection do |conn|
-#     sql_query = "SELECT movies.id, movies.title, movies.year, movies.rating, genres.name AS genre, studios.name AS studio
-#     FROM movies
-#     LEFT JOIN genres ON movies.genre_id = genres.id
-#     LEFT JOIN studios ON movies.studio_id = studios.id
-#     ORDER BY movies.year;"
-#     conn.exec(sql_query)
-#   end
-# end
 
 get '/' do
   redirect "/actors"
@@ -105,18 +75,3 @@ get '/movies/:id' do
   end
   erb :'movies/show'
 end
-
-# ORIGINAL
-# get '/movies/:id' do
-#   db_connection do |conn|
-#     sql_query = "SELECT movies.title, movies.year, movies.rating, actors.id AS actor_id, genres.name AS genre, studios.name AS studio, cast_members.character AS role, actors.name AS actor_name
-#     FROM movies
-#     JOIN genres ON movies.genre_id = genres.id
-#     JOIN studios ON movies.studio_id = studios.id
-#     JOIN cast_members ON movies.id = cast_members.movie_id
-#     JOIN actors ON cast_members.actor_id = actors.id
-#     WHERE movies.id = '#{params[:id]}';"
-#     @movie_info = conn.exec(sql_query)
-#   end
-#   erb :'movies/show'
-# end
